@@ -42,6 +42,7 @@ NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
 ValidationError = logic.ValidationError
 _get_or_bust = logic.get_or_bust
+_get_action = logic.get_action
 
 _select = sqlalchemy.sql.select
 _or_ = sqlalchemy.or_
@@ -2371,20 +2372,27 @@ def get_site_user(context, data_dict):
     model = context['model']
     site_id = config.get('ckan.site_id', 'ckan_site_user')
     user = model.User.get(site_id)
-    if not user:
-        apikey = str(uuid.uuid4())
+    if user:
+        user_token = _get_action('api_token_create')(
+            context, {'user':user.id, 'name':'default'}
+        )
+    else:
+        password = str(uuid.uuid4())
         user = model.User(name=site_id,
-                          password=apikey,
-                          apikey=apikey)
+                          password=password)
         # make sysadmin
         user.sysadmin = True
         model.Session.add(user)
         model.Session.flush()
         if not context.get('defer_commit'):
             model.repo.commit()
+        # make user_token
+        user_token = _get_action('api_token_create')(
+            context, {'user':user.id, 'name':'default'}
+        )
 
     return {'name': user.name,
-            'apikey': user.apikey}
+            'apitoken': user_token['token']}
 
 
 def status_show(context, data_dict):

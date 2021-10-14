@@ -6,6 +6,7 @@ from flask import Blueprint
 
 import ckan.plugins as p
 from ckan.common import config, _
+from ckan.exceptions import CkanConfigurationException
 
 
 class MockRoutingPlugin(p.SingletonPlugin):
@@ -73,5 +74,5 @@ def test_beaker_secret_is_used_by_default(app):
 def test_no_beaker_secret_crashes(make_app):
     # TODO: When Pylons is finally removed, we should test for
     # RuntimeError instead (thrown on `make_flask_stack`)
-    with pytest.raises(RuntimeError):
+    with pytest.raises(CkanConfigurationException):
         make_app()

@@ -32,7 +32,10 @@ def _get_secret(encode):
     config_key = _config_encode_secret if encode else _config_decode_secret
     secret = config.get(config_key)
     if not secret:
-        secret = u"string:" + config.get(_config_secret_fallback, u"")
+        if config.get(_config_secret_fallback):
+            secret = u"string:" + config.get(_config_secret_fallback)
+        else:
+            secret = u"string:" + ""
     type_, value = secret.split(u":", 1)
     if type_ == u"file":
         with open(value, u"rb") as key_file:

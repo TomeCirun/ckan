@@ -133,7 +133,7 @@ def datapusher_submit(context, data_dict):
                 'Content-Type': 'application/json'
             },
             data=json.dumps({
-                'api_key': site_user['apikey'],
+                'api_key': site_user['apitoken'],
                 'job_type': 'push_to_datastore',
                 'result_url': callback_url,
                 'metadata': {
