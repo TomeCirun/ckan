@@ -137,7 +137,7 @@ def index(group_type, is_organization):
     except NotAuthorized:
         base.abort(403, _(u'Not authorized to see this page'))
 
-    q = request.params.get(u'q', u'')
+    q = request.params.get(u'q', u'').strip()
     sort_by = request.params.get(u'sort')
 
     # TODO: Remove
