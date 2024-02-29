@@ -5,6 +5,7 @@ import datetime
 import logging
 import re
 from typing import Any, Optional
+from urllib3.exceptions import NewConnectionError
 
 import pysolr
 import simplejson
@@ -26,6 +27,10 @@ class SearchError(Exception):
 
 
 class SearchQueryError(SearchError):
+    pass
+
+
+class SolrConnectionError(NewConnectionError):
     pass
 
 

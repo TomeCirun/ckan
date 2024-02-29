@@ -345,7 +345,7 @@ def make_flask_stack(conf: Union[Config, CKANConfig]) -> CKANApp:
 
     # Add a reference to the actual Flask app so it's easier to access
     # type_ignore_reason: custom attribute
-    app._wsgi_app = flask_app  # type: ignore
+    app._wsgi_app = flask_app
 
     return app
 
@@ -416,7 +416,7 @@ def ckan_before_request() -> Optional[Response]:
         # eg "organization.edit" -> "group.edit", or custom dataset types
         endpoint = request.endpoint or ""
         view = current_app.view_functions.get(endpoint)
-        dest = f"{view.__module__}.{view.__name__}"     # type: ignore
+        dest = f"{view.__module__}.{view.__name__}"
         csrf.exempt(dest)
 
     # Set the csrf_field_name so we can use it in our templates
@@ -608,7 +608,7 @@ def _register_error_handler(app: CKANApp):
         debug = config.get('debug')
         if isinstance(e, HTTPException):
             if debug:
-                log.debug(e, exc_info=sys.exc_info)  # type: ignore
+                log.debug(e, exc_info=sys.exc_info)
             else:
                 log.info(e)
 
@@ -624,7 +624,7 @@ def _register_error_handler(app: CKANApp):
             return base.render(
                 u'error_document_template.html', extra_vars), e.code
 
-        log.error(e, exc_info=sys.exc_info)  # type: ignore
+        log.error(e, exc_info=sys.exc_info)
         extra_vars = {u'code': [500], u'content': u'Internal server error'}
         return base.render(u'error_document_template.html', extra_vars), 500
 
